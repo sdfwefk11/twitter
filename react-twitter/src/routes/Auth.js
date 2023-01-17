@@ -40,7 +40,7 @@ const Auth = () => {
       } else {
         await signIn;
       }
-      console.log(createAccount, signIn);
+      // console.log(createAccount, signIn);
     } catch (error) {}
   };
   const toggle = () => {

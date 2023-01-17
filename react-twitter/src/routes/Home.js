@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { collection, addDoc, getDocs } from "firebase/firestore";
+import { collection, addDoc, getDocs, onSnapshot } from "firebase/firestore";
 import { dbService } from "twutterbase";
-const Home = () => {
+const Home = ({ userObj }) => {
   const [twitt, setTwitt] = useState("");
   const [fieldData, setFieldData] = useState([]);
 
@@ -9,7 +9,6 @@ const Home = () => {
     event.preventDefault();
     addingDoc();
     setTwitt("");
-    querySnapshot();
   };
   const onChange = (event) => {
     const {
@@ -32,22 +31,21 @@ const Home = () => {
     await addDoc(collection(dbService, "users"), {
       twitting: twitt,
       date: twitteTime,
+      uid: userObj.uid,
     });
   };
 
   useEffect(() => {
-    querySnapshot();
-  }, []);
-  const querySnapshot = async () => {
-    const snapshot = await getDocs(collection(dbService, "users"));
-    const twittingArr = [];
-    snapshot.forEach((doc) => {
-      const twitting = doc.data();
-      twittingArr.push(twitting);
+    onSnapshot(collection(dbService, "users"), (snapshot) => {
+      const twittingArr = snapshot.docs.map((doc) => ({
+        uid: doc.data().uid,
+        date: doc.data().date,
+        twitting: doc.data().twitting,
+      }));
       setFieldData(twittingArr);
     });
-  };
-  // console.log(fieldData);
+  }, []);
+
   return (
     <div>
       <form onSubmit={onSubmit}>
