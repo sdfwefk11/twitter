@@ -4,6 +4,7 @@ import { dbService } from "twutterbase";
 const Home = () => {
   const [twitt, setTwitt] = useState("");
   const [fieldData, setFieldData] = useState([]);
+
   const onSubmit = (event) => {
     event.preventDefault();
     addingDoc();
@@ -18,22 +19,35 @@ const Home = () => {
   };
 
   const addingDoc = async () => {
+    const now = new Date();
+    const year = now.getFullYear();
+    const date = now.getDate().toString();
+    const day = (now.getDay() - 1).toString();
+    const hours = now.getHours().toString();
+    const minutes = now.getMinutes().toString();
+    const twitteTime = `${year}/${day.padStart(2, "0")}/${date.padStart(
+      2,
+      "0"
+    )} ${hours.padStart(2, "0")} : ${minutes.padStart(2, "0")}`;
     await addDoc(collection(dbService, "users"), {
       twitting: twitt,
+      date: twitteTime,
     });
   };
+
   useEffect(() => {
     querySnapshot();
   }, []);
   const querySnapshot = async () => {
     const snapshot = await getDocs(collection(dbService, "users"));
-    const arr = [];
+    const twittingArr = [];
     snapshot.forEach((doc) => {
-      const twitting = doc.get("twitting");
-      arr.push(twitting);
+      const twitting = doc.data();
+      twittingArr.push(twitting);
+      setFieldData(twittingArr);
     });
-    setFieldData(arr);
   };
+  // console.log(fieldData);
   return (
     <div>
       <form onSubmit={onSubmit}>
@@ -50,7 +64,9 @@ const Home = () => {
         <form>
           <ul>
             {fieldData.map((item, index) => (
-              <li key={index}>{item}</li>
+              <li key={index}>
+                {item.twitting} {item.date}
+              </li>
             ))}
           </ul>
         </form>
