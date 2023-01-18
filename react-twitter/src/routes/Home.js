@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { collection, addDoc, getDocs, onSnapshot } from "firebase/firestore";
+import { collection, addDoc, onSnapshot } from "firebase/firestore";
 import { dbService } from "twutterbase";
+import DeleteTwitte from "components/DeleteTwitte";
 const Home = ({ userObj }) => {
   const [twitt, setTwitt] = useState("");
   const [fieldData, setFieldData] = useState([]);
@@ -28,6 +29,7 @@ const Home = ({ userObj }) => {
       2,
       "0"
     )} ${hours.padStart(2, "0")} : ${minutes.padStart(2, "0")}`;
+
     await addDoc(collection(dbService, "users"), {
       twitting: twitt,
       date: twitteTime,
@@ -38,9 +40,11 @@ const Home = ({ userObj }) => {
   useEffect(() => {
     onSnapshot(collection(dbService, "users"), (snapshot) => {
       const twittingArr = snapshot.docs.map((doc) => ({
-        uid: doc.data().uid,
-        date: doc.data().date,
-        twitting: doc.data().twitting,
+        uid: doc.uid,
+        date: doc.date,
+        twitting: doc.twitting,
+        id: doc.id,
+        ...doc.data(),
       }));
       setFieldData(twittingArr);
     });
@@ -58,17 +62,15 @@ const Home = ({ userObj }) => {
         ></input>
         <input type="submit" value="Twitt"></input>
       </form>
-      <>
-        <form>
-          <ul>
-            {fieldData.map((item, index) => (
-              <li key={index}>
-                {item.twitting} {item.date}
-              </li>
-            ))}
-          </ul>
-        </form>
-      </>
+      <div>
+        {fieldData.map((item, index) => (
+          <DeleteTwitte
+            key={index}
+            twittObj={item}
+            uid={userObj.uid === item.uid}
+          />
+        ))}
+      </div>
     </div>
   );
 };
