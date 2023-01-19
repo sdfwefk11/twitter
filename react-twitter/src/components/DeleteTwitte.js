@@ -52,6 +52,13 @@ const DeleteTwitte = ({ twittObj, uid }) => {
           <h4>
             {twittObj.twitting} {twittObj.date}
           </h4>
+          {twittObj.downloadFile && (
+            <img
+              alt={twittObj.downloadFile}
+              src={twittObj.downloadFile}
+              width="200px"
+            ></img>
+          )}
           {uid && (
             <>
               <button onClick={onDeleteClick}>Delete Twitte</button>

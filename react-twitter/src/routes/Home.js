@@ -1,16 +1,20 @@
+import { v4 as uuidv4 } from "uuid";
 import React, { useEffect, useState } from "react";
 import { collection, addDoc, onSnapshot } from "firebase/firestore";
-import { dbService } from "twutterbase";
+import { dbService, storageServie } from "twutterbase";
+import { ref, uploadString, getDownloadURL } from "firebase/storage";
 import DeleteTwitte from "components/DeleteTwitte";
 const Home = ({ userObj }) => {
   const [twitt, setTwitt] = useState("");
   const [fieldData, setFieldData] = useState([]);
+  const [imgSource, setImgSource] = useState(null);
 
   const onSubmit = (event) => {
     event.preventDefault();
     addingDoc();
     setTwitt("");
   };
+
   const onChange = (event) => {
     const {
       target: { value },
@@ -29,11 +33,15 @@ const Home = ({ userObj }) => {
       2,
       "0"
     )} ${hours.padStart(2, "0")} : ${minutes.padStart(2, "0")}`;
-
+    const fileRef = ref(storageServie, `${userObj.uid}/${uuidv4()}`);
+    await uploadString(fileRef, imgSource, "data_url");
+    const downloadFile = await getDownloadURL(fileRef);
+    setImgSource("");
     await addDoc(collection(dbService, "users"), {
       twitting: twitt,
       date: twitteTime,
       uid: userObj.uid,
+      downloadFile,
     });
   };
 
@@ -49,12 +57,23 @@ const Home = ({ userObj }) => {
       setFieldData(twittingArr);
     });
   }, []);
+
   const onFileChange = (event) => {
     const {
       target: { files },
     } = event;
     const imgFile = files[0];
-    console.log(imgFile);
+    const reader = new FileReader();
+    reader.onloadend = (finishedEvent) => {
+      const {
+        currentTarget: { result },
+      } = finishedEvent;
+      setImgSource(result);
+    };
+    reader.readAsDataURL(imgFile);
+  };
+  const onCancelBtn = () => {
+    setImgSource(null);
   };
   return (
     <div>
@@ -66,8 +85,14 @@ const Home = ({ userObj }) => {
           placeholder="What's on your mind?"
           maxLength={120}
         ></input>
-        <input type="file" accept="image/*" onChange={onFileChange}></input>
         <input type="submit" value="Twitt"></input>
+        <input type="file" accept="image/*" onChange={onFileChange}></input>
+        {imgSource && (
+          <div>
+            <img alt={imgSource} src={imgSource} width="300px"></img>
+            <button onClick={onCancelBtn}>Cancel</button>
+          </div>
+        )}
       </form>
       <div>
         {fieldData.map((item, index) => (
