@@ -49,7 +49,13 @@ const Home = ({ userObj }) => {
       setFieldData(twittingArr);
     });
   }, []);
-
+  const onFileChange = (event) => {
+    const {
+      target: { files },
+    } = event;
+    const imgFile = files[0];
+    console.log(imgFile);
+  };
   return (
     <div>
       <form onSubmit={onSubmit}>
@@ -60,6 +66,7 @@ const Home = ({ userObj }) => {
           placeholder="What's on your mind?"
           maxLength={120}
         ></input>
+        <input type="file" accept="image/*" onChange={onFileChange}></input>
         <input type="submit" value="Twitt"></input>
       </form>
       <div>
