@@ -45,6 +45,7 @@ const Home = ({ userObj }) => {
       date: twitteTime,
       uid: userObj.uid,
       downloadFile,
+      sortNum: Date.now(),
     });
   };
 
