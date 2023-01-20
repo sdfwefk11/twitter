@@ -32,10 +32,13 @@ const Home = ({ userObj }) => {
     const twitteTime = `${year}/${day.padStart(2, "0")}/${date.padStart(
       2,
       "0"
-    )} ${hours.padStart(2, "0")} : ${minutes.padStart(2, "0")}`;
-    const fileRef = ref(storageServie, `${userObj.uid}/${uuidv4()}`);
-    await uploadString(fileRef, imgSource, "data_url");
-    const downloadFile = await getDownloadURL(fileRef);
+    )} ${hours.padStart(2, "0")}:${minutes.padStart(2, "0")}`;
+    let downloadFile = "";
+    if (imgSource !== null) {
+      const fileRef = ref(storageServie, `${userObj.uid}/${uuidv4()}`);
+      await uploadString(fileRef, imgSource, "data_url");
+      downloadFile = await getDownloadURL(fileRef);
+    }
     setImgSource("");
     await addDoc(collection(dbService, "users"), {
       twitting: twitt,

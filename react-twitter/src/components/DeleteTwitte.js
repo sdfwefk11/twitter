@@ -1,15 +1,20 @@
 import React, { useState } from "react";
 import { deleteDoc, doc, updateDoc } from "firebase/firestore";
-import { dbService } from "twutterbase";
+import { dbService, storageServie } from "twutterbase";
+import { deleteObject, ref } from "firebase/storage";
 
 const DeleteTwitte = ({ twittObj, uid }) => {
   const [editing, setEditing] = useState(false);
   const [newTwitt, setNewTwitt] = useState(twittObj.twitting);
-  const onDeleteClick = () => {
+  const onDeleteClick = async () => {
     const ok = window.confirm("Are you sure you want to delete this twitt?");
     const del = doc(dbService, "users", `${twittObj.id}`);
+    const delPhoto = ref(storageServie, twittObj.downloadFile);
     if (ok) {
-      deleteDoc(del);
+      await deleteDoc(del);
+      if (twittObj.downloadFile) {
+        await deleteObject(delPhoto);
+      }
     } else {
       alert("canceled");
     }
