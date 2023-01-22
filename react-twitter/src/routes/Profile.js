@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { authService, dbService } from "twutterbase";
+import React, { useState } from "react";
+import { authService } from "twutterbase";
 import { useNavigate } from "react-router-dom";
-import { collection, where, query, getDocs, orderBy } from "firebase/firestore";
 import { updateProfile } from "firebase/auth";
 const Profile = ({ userObj, refreshUser }) => {
   const [newUserName, setNewUserName] = useState(userObj.displayName);
@@ -12,20 +11,6 @@ const Profile = ({ userObj, refreshUser }) => {
       navigate("/");
     }
   };
-  const getUserTwitts = async () => {
-    const twitts = query(
-      collection(dbService, "users"),
-      where("uid", "==", userObj.uid),
-      orderBy("sortNum")
-    );
-    const snapshot = await getDocs(twitts);
-    snapshot.forEach((doc) => {
-      console.log(doc.id, "=>", doc.data());
-    });
-  };
-  useEffect(() => {
-    getUserTwitts();
-  }, []);
 
   const changeProfileName = (event) => {
     const {
