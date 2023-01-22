@@ -43,9 +43,9 @@ const Twitte = ({ twittObj, uid }) => {
           <form onSubmit={onSubmit} className="container nweetEdit">
             <input
               onChange={onChange}
-              placeholder="Edit here!"
+              placeholder="Edit here"
               type="text"
-              value={newTwitt}
+              // value={newTwitt}
               required
               autoFocus
               className="formInput"
