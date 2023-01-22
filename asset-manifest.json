@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/sdfwefk11/twitter/static/css/main.bf08bbb7.css",
+    "main.js": "/sdfwefk11/twitter/static/js/main.91d91398.js",
+    "index.html": "/sdfwefk11/twitter/index.html",
+    "main.bf08bbb7.css.map": "/sdfwefk11/twitter/static/css/main.bf08bbb7.css.map",
+    "main.91d91398.js.map": "/sdfwefk11/twitter/static/js/main.91d91398.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.bf08bbb7.css",
+    "static/js/main.91d91398.js"
+  ]
+}
