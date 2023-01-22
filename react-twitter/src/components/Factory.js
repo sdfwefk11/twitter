@@ -72,6 +72,7 @@ const Factory = ({ userObj }) => {
     <form onSubmit={onSubmit} className="factoryForm">
       <div className="factoryInput__container">
         <input
+          className="factoryInput__input"
           value={twitt}
           onChange={onChange}
           type="text"
