@@ -19,9 +19,9 @@ const Home = ({ userObj }) => {
     });
   }, []);
   return (
-    <div>
+    <div className="container">
       <Factory userObj={userObj} />
-      <div>
+      <div style={{ marginTop: 30 }}>
         {fieldData.map((item, index) => (
           <Twitte key={index} twittObj={item} uid={userObj.uid === item.uid} />
         ))}

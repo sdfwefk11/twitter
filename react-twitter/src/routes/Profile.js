@@ -26,12 +26,14 @@ const Profile = ({ userObj, refreshUser }) => {
   useEffect(() => {
     getUserTwitts();
   }, []);
+
   const changeProfileName = (event) => {
     const {
       target: { value },
     } = event;
     setNewUserName(value);
   };
+
   const onSubmit = async (event) => {
     event.preventDefault();
     if (userObj.displayName !== newUserName) {
@@ -40,20 +42,30 @@ const Profile = ({ userObj, refreshUser }) => {
       });
       refreshUser();
     }
+    setNewUserName("");
   };
   return (
-    <>
-      <form onSubmit={onSubmit}>
+    <div className="container">
+      <form onSubmit={onSubmit} className="profileFrom">
         <input
           onChange={changeProfileName}
           value={newUserName}
           type="text"
-          placeholder="Display name"
+          placeholder="Edit profile name"
+          autoFocus
+          className="formInput"
         ></input>
-        <input type="submit" value="update profile"></input>
+        <input
+          type="submit"
+          value="update profile"
+          className="formBtn"
+          style={{ marginTop: 10 }}
+        ></input>
       </form>
-      <button onClick={onLogoutClick}>Log out</button>
-    </>
+      <span className="formBtn cancelBtn logOut" onClick={onLogoutClick}>
+        Log Out
+      </span>
+    </div>
   );
 };
 

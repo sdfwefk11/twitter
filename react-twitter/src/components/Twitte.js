@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { deleteDoc, doc, updateDoc } from "firebase/firestore";
 import { dbService, storageServie } from "twutterbase";
 import { deleteObject, ref } from "firebase/storage";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrash, faPencilAlt } from "@fortawesome/free-solid-svg-icons";
 
 const Twitte = ({ twittObj, uid }) => {
   const [editing, setEditing] = useState(false);
@@ -15,8 +17,6 @@ const Twitte = ({ twittObj, uid }) => {
       if (twittObj.downloadFile) {
         await deleteObject(delPhoto);
       }
-    } else {
-      alert("canceled");
     }
   };
   const toggleEditing = () => {
@@ -37,38 +37,47 @@ const Twitte = ({ twittObj, uid }) => {
     setNewTwitt(value);
   };
   return (
-    <div>
+    <div className="nweet">
       {editing ? (
         <>
-          <form onSubmit={onSubmit}>
+          <form onSubmit={onSubmit} className="container nweetEdit">
             <input
               onChange={onChange}
               placeholder="Edit here!"
               type="text"
               value={newTwitt}
               required
+              autoFocus
+              className="formInput"
             ></input>
-            <input type="submit" value="Save"></input>
+            <input type="submit" value="Save" className="formBtn"></input>
           </form>
-          <button onClick={toggleEditing}>Cancel</button>
+          <span className="formBtn cancelBtn" onClick={toggleEditing}>
+            Cancel
+          </span>
         </>
       ) : (
         <>
-          <h4>
-            {twittObj.twitting} {twittObj.date}
-          </h4>
+          <h3 className="줄바꿈">
+            {twittObj.twitting}
+            <p>
+              <span>{twittObj.date}</span>
+            </p>
+          </h3>
           {twittObj.downloadFile && (
-            <img
-              alt={twittObj.downloadFile}
-              src={twittObj.downloadFile}
-              width="200px"
-            ></img>
+            <img alt={twittObj.downloadFile} src={twittObj.downloadFile}></img>
           )}
           {uid && (
-            <>
-              <button onClick={onDeleteClick}>Delete Twitte</button>
-              <button onClick={toggleEditing}>Edit Twitte</button>
-            </>
+            <div className="nweet__actions">
+              <span onClick={onDeleteClick}>
+                Delete
+                <FontAwesomeIcon icon={faTrash} />
+              </span>
+              <span onClick={toggleEditing}>
+                Edit
+                <FontAwesomeIcon icon={faPencilAlt} />
+              </span>
+            </div>
           )}
         </>
       )}

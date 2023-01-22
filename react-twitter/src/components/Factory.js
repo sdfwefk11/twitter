@@ -3,6 +3,8 @@ import { v4 as uuidv4 } from "uuid";
 import { collection, addDoc } from "firebase/firestore";
 import { dbService, storageServie } from "twutterbase";
 import { ref, uploadString, getDownloadURL } from "firebase/storage";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus, faTimes } from "@fortawesome/free-solid-svg-icons";
 const Factory = ({ userObj }) => {
   const [twitt, setTwitt] = useState("");
   const [imgSource, setImgSource] = useState("");
@@ -10,6 +12,9 @@ const Factory = ({ userObj }) => {
     event.preventDefault();
     addingDoc();
     setTwitt("");
+    if (twitt === "") {
+      return;
+    }
   };
 
   const onChange = (event) => {
@@ -23,7 +28,7 @@ const Factory = ({ userObj }) => {
     const now = new Date();
     const year = now.getFullYear();
     const date = now.getDate().toString();
-    const day = (now.getDay() - 1).toString();
+    const day = (now.getDay() + 1).toString();
     const hours = now.getHours().toString();
     const minutes = now.getMinutes().toString();
     const twitteTime = `${year}/${day.padStart(2, "0")}/${date.padStart(
@@ -64,20 +69,47 @@ const Factory = ({ userObj }) => {
     setImgSource(null);
   };
   return (
-    <form onSubmit={onSubmit}>
+    <form onSubmit={onSubmit} className="factoryForm">
+      <div className="factoryInput__container">
+        <input
+          value={twitt}
+          onChange={onChange}
+          type="text"
+          placeholder="What's on your mind?"
+          maxLength={120}
+        ></input>
+        <input
+          type="submit"
+          value="Twitt"
+          className="factoryInput__arrow"
+        ></input>
+      </div>
+      <label htmlFor="attach-file" className="factoryInput__label">
+        <span>Add photos</span>
+        <FontAwesomeIcon icon={faPlus} />
+      </label>
       <input
-        value={twitt}
-        onChange={onChange}
-        type="text"
-        placeholder="What's on your mind?"
-        maxLength={120}
+        id="attach-file"
+        type="file"
+        accept="image/*"
+        onChange={onFileChange}
+        style={{
+          opacity: 0,
+        }}
       ></input>
-      <input type="file" accept="image/*" onChange={onFileChange}></input>
-      <input type="submit" value="Twitt"></input>
       {imgSource && (
-        <div>
-          <img alt={imgSource} src={imgSource} width="300px"></img>
-          <button onClick={onCancelBtn}>Cancel</button>
+        <div className="factoryForm__attachment">
+          <img
+            alt={imgSource}
+            src={imgSource}
+            style={{
+              backgroundImage: imgSource,
+            }}
+          ></img>
+          <div className="factoryForm__clear" onClick={onCancelBtn}>
+            <span>Clear</span>
+            <FontAwesomeIcon icon={faTimes} />
+          </div>
         </div>
       )}
     </form>
