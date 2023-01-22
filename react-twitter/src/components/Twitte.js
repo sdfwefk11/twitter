@@ -3,7 +3,7 @@ import { deleteDoc, doc, updateDoc } from "firebase/firestore";
 import { dbService, storageServie } from "twutterbase";
 import { deleteObject, ref } from "firebase/storage";
 
-const DeleteTwitte = ({ twittObj, uid }) => {
+const Twitte = ({ twittObj, uid }) => {
   const [editing, setEditing] = useState(false);
   const [newTwitt, setNewTwitt] = useState(twittObj.twitting);
   const onDeleteClick = async () => {
@@ -76,4 +76,4 @@ const DeleteTwitte = ({ twittObj, uid }) => {
   );
 };
 
-export default DeleteTwitte;
+export default Twitte;
